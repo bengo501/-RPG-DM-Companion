@@ -13,6 +13,7 @@ import {
   uuid,
 } from "drizzle-orm/pg-core";
 import type { ActorSheet } from "@/lib/actors/sheet";
+import type { DiceGroup } from "@/lib/dice/roll";
 import type { SystemTemplate } from "@/lib/templates/schema";
 
 /**
@@ -278,3 +279,39 @@ export const notes = pgTable(
 
 export type Note = typeof notes.$inferSelect;
 export type NewNote = typeof notes.$inferInsert;
+
+// ---------------------------------------------------------------------------
+// Rolagens de dados (histórico) — M4
+// ---------------------------------------------------------------------------
+
+export const diceRolls = pgTable(
+  "dice_roll",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    campaignId: uuid("campaign_id")
+      .notNull()
+      .references(() => campaigns.id, { onDelete: "cascade" }),
+    ownerId: uuid("owner_id").notNull(),
+    expression: text("expression").notNull(),
+    label: text("label"),
+    total: integer("total").notNull(),
+    detail: text("detail").notNull().default(""),
+    /** Detalhamento por grupo de dados (valores rolados, mantidos). */
+    breakdown: jsonb("breakdown")
+      .$type<DiceGroup[]>()
+      .notNull()
+      .default(sql`'[]'::jsonb`),
+    /** Rolagem oculta do mestre. */
+    hidden: boolean("hidden").notNull().default(false),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => [
+    index("dice_roll_campaign_idx").on(table.campaignId),
+    index("dice_roll_owner_idx").on(table.ownerId),
+  ],
+);
+
+export type DiceRoll = typeof diceRolls.$inferSelect;
+export type NewDiceRoll = typeof diceRolls.$inferInsert;

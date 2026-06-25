@@ -19,6 +19,7 @@ export function CampaignTabs({
     { href: `${base}/locations`, label: "Locais" },
     { href: `${base}/sessions`, label: "Sessões" },
     { href: `${base}/notes`, label: "Notas" },
+    { href: `${base}/dice`, label: "Dados" },
   ];
 
   return (

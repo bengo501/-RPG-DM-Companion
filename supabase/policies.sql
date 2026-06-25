@@ -128,3 +128,18 @@ create policy "note_update_own" on note
 drop policy if exists "note_delete_own" on note;
 create policy "note_delete_own" on note
   for delete to authenticated using (auth.uid() = owner_id);
+
+-- ---------------------------------------------------------------------------
+-- dice_roll (M4)
+-- ---------------------------------------------------------------------------
+alter table dice_roll enable row level security;
+
+drop policy if exists "dice_roll_select_own" on dice_roll;
+create policy "dice_roll_select_own" on dice_roll
+  for select to authenticated using (auth.uid() = owner_id);
+drop policy if exists "dice_roll_insert_own" on dice_roll;
+create policy "dice_roll_insert_own" on dice_roll
+  for insert to authenticated with check (auth.uid() = owner_id);
+drop policy if exists "dice_roll_delete_own" on dice_roll;
+create policy "dice_roll_delete_own" on dice_roll
+  for delete to authenticated using (auth.uid() = owner_id);
