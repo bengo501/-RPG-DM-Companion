@@ -1,4 +1,5 @@
-# OpenMaster-NarratorHelper — Painel do Mestre (RPG GM Companion)
+# OpenMaster-NarratorHelper — Painel do Mestre 
+# (RPG GM Companion)
 
 Ferramenta para mestres de RPG planejarem, organizarem e conduzirem campanhas.
 Agnóstica de sistema: o comportamento de fichas, rolagens e combate é dirigido por
