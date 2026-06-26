@@ -18,8 +18,10 @@ export function CampaignTabs({
     { href: `${base}/actors`, label: "Personagens & NPCs" },
     { href: `${base}/locations`, label: "Locais" },
     { href: `${base}/sessions`, label: "Sessões" },
+    { href: `${base}/encounters`, label: "Combate" },
     { href: `${base}/notes`, label: "Notas" },
     { href: `${base}/dice`, label: "Dados" },
+    { href: `${base}/live`, label: "Sessão ao Vivo" },
   ];
 
   return (

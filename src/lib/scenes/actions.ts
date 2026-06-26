@@ -137,3 +137,25 @@ export async function deleteScene(
   revalidatePath(`/campaigns/${campaignId}/sessions/${sessionId}`);
   redirect(`/campaigns/${campaignId}/sessions/${sessionId}`);
 }
+
+/** Define o status de uma cena (usado no modo ao vivo). */
+export async function setSceneStatus(
+  sceneId: string,
+  status: SceneStatusValue,
+): Promise<void> {
+  if (!(SCENE_STATUSES as readonly string[]).includes(status)) return;
+  const user = await requireUser();
+  const db = getDb();
+  const [s] = await db
+    .select()
+    .from(scenes)
+    .where(and(eq(scenes.id, sceneId), eq(scenes.ownerId, user.id)))
+    .limit(1);
+  if (!s) return;
+  await db
+    .update(scenes)
+    .set({ status, updatedAt: new Date() })
+    .where(eq(scenes.id, sceneId));
+  revalidatePath(`/campaigns/${s.campaignId}/live`);
+  revalidatePath(`/campaigns/${s.campaignId}/sessions/${s.sessionId}`);
+}

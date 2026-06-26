@@ -155,3 +155,25 @@ export async function deleteSession(
   revalidatePath(`/campaigns/${campaignId}/sessions`);
   redirect(`/campaigns/${campaignId}/sessions`);
 }
+
+/** Define o status de uma sessão (usado no modo ao vivo: iniciar/encerrar). */
+export async function setSessionStatus(
+  sessionId: string,
+  status: SessionStatusValue,
+): Promise<void> {
+  if (!(SESSION_STATUSES as readonly string[]).includes(status)) return;
+  const user = await requireUser();
+  const db = getDb();
+  const [s] = await db
+    .select()
+    .from(sessions)
+    .where(and(eq(sessions.id, sessionId), eq(sessions.ownerId, user.id)))
+    .limit(1);
+  if (!s) return;
+  await db
+    .update(sessions)
+    .set({ status, updatedAt: new Date() })
+    .where(eq(sessions.id, sessionId));
+  revalidatePath(`/campaigns/${s.campaignId}/live`);
+  revalidatePath(`/campaigns/${s.campaignId}/sessions/${sessionId}`);
+}

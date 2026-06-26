@@ -13,6 +13,7 @@ import { listActors } from "@/lib/actors/actions";
 import { deleteCampaign } from "@/lib/campaigns/actions";
 import { STATUS_LABELS } from "@/lib/campaigns/constants";
 import { loadCampaign } from "@/lib/campaigns/context";
+import { listEncounters } from "@/lib/combat/actions";
 import { listLocations } from "@/lib/locations/actions";
 import { listNotes } from "@/lib/notes/actions";
 import { listSessions } from "@/lib/sessions/actions";
@@ -30,12 +31,14 @@ export default async function CampaignPage({
 
   const campaign = ctx.campaign;
   const tpl = campaign.systemSnapshot;
-  const [actors, locations, gameSessions, campaignNotes] = await Promise.all([
-    listActors(id),
-    listLocations(id),
-    listSessions(id),
-    listNotes(id),
-  ]);
+  const [actors, locations, gameSessions, campaignNotes, campaignEncounters] =
+    await Promise.all([
+      listActors(id),
+      listLocations(id),
+      listSessions(id),
+      listNotes(id),
+      listEncounters(id),
+    ]);
 
   return (
     <div className="space-y-6">
@@ -101,6 +104,16 @@ export default async function CampaignPage({
               <CardTitle>Sessões</CardTitle>
               <CardDescription>
                 {gameSessions.length} registrada(s)
+              </CardDescription>
+            </CardHeader>
+          </Card>
+        </Link>
+        <Link href={`/campaigns/${id}/encounters`}>
+          <Card className="h-full transition-colors hover:border-primary/50">
+            <CardHeader>
+              <CardTitle>Combate</CardTitle>
+              <CardDescription>
+                {campaignEncounters.length} encontro(s)
               </CardDescription>
             </CardHeader>
           </Card>

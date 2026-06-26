@@ -315,3 +315,92 @@ export const diceRolls = pgTable(
 
 export type DiceRoll = typeof diceRolls.$inferSelect;
 export type NewDiceRoll = typeof diceRolls.$inferInsert;
+
+// ---------------------------------------------------------------------------
+// Combate: encontros e combatentes — M5
+// ---------------------------------------------------------------------------
+
+export const encounterStatus = pgEnum("encounter_status", [
+  "planned",
+  "active",
+  "done",
+]);
+
+export const encounters = pgTable(
+  "encounter",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    campaignId: uuid("campaign_id")
+      .notNull()
+      .references(() => campaigns.id, { onDelete: "cascade" }),
+    ownerId: uuid("owner_id").notNull(),
+    name: text("name").notNull(),
+    status: encounterStatus("status").notNull().default("planned"),
+    round: integer("round").notNull().default(1),
+    /** Combatente cujo turno está ativo (sem FK p/ evitar ciclo). */
+    activeCombatantId: uuid("active_combatant_id"),
+    notes: text("notes"),
+    data: jsonb("data")
+      .$type<Record<string, unknown>>()
+      .notNull()
+      .default(sql`'{}'::jsonb`),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => [
+    index("encounter_campaign_idx").on(table.campaignId),
+    index("encounter_owner_idx").on(table.ownerId),
+  ],
+);
+
+export type Encounter = typeof encounters.$inferSelect;
+export type NewEncounter = typeof encounters.$inferInsert;
+
+export const combatants = pgTable(
+  "combatant",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    encounterId: uuid("encounter_id")
+      .notNull()
+      .references(() => encounters.id, { onDelete: "cascade" }),
+    campaignId: uuid("campaign_id")
+      .notNull()
+      .references(() => campaigns.id, { onDelete: "cascade" }),
+    ownerId: uuid("owner_id").notNull(),
+    /** Ator vinculado (NPC/PC), se houver. */
+    actorId: uuid("actor_id").references(() => actors.id, {
+      onDelete: "set null",
+    }),
+    name: text("name").notNull(),
+    initiative: integer("initiative").notNull().default(0),
+    hpCurrent: integer("hp_current"),
+    hpMax: integer("hp_max"),
+    defense: integer("defense"),
+    conditions: jsonb("conditions")
+      .$type<string[]>()
+      .notNull()
+      .default(sql`'[]'::jsonb`),
+    isPc: boolean("is_pc").notNull().default(false),
+    data: jsonb("data")
+      .$type<Record<string, unknown>>()
+      .notNull()
+      .default(sql`'{}'::jsonb`),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => [
+    index("combatant_encounter_idx").on(table.encounterId),
+    index("combatant_owner_idx").on(table.ownerId),
+  ],
+);
+
+export type Combatant = typeof combatants.$inferSelect;
+export type NewCombatant = typeof combatants.$inferInsert;

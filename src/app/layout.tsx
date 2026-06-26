@@ -3,7 +3,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 
 export const metadata: Metadata = {
-  title: "Mesa Viva — Painel do Mestre",
+  title: "OpenMaster-NarratorHelper — Painel do Mestre",
   description:
     "Ferramenta para mestres de RPG: planeje, organize e conduza suas campanhas.",
 };

@@ -59,7 +59,7 @@ export default function LoginPage() {
       <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle>
-            Mesa <span className="text-primary">Viva</span>
+            OpenMaster<span className="text-primary">-NarratorHelper</span>
           </CardTitle>
           <CardDescription>
             {mode === "signin"

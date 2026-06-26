@@ -1,5 +1,5 @@
 -- =====================================================================
--- Mesa Viva — Row Level Security (RLS)
+-- OpenMaster-NarratorHelper — Row Level Security (RLS)
 -- Rode este script no Supabase: SQL Editor > New query > Run.
 -- Rode DEPOIS de aplicar as migrations (npm run db:migrate).
 --
@@ -142,4 +142,39 @@ create policy "dice_roll_insert_own" on dice_roll
   for insert to authenticated with check (auth.uid() = owner_id);
 drop policy if exists "dice_roll_delete_own" on dice_roll;
 create policy "dice_roll_delete_own" on dice_roll
+  for delete to authenticated using (auth.uid() = owner_id);
+
+-- ---------------------------------------------------------------------------
+-- encounter, combatant (M5)
+-- ---------------------------------------------------------------------------
+alter table encounter enable row level security;
+
+drop policy if exists "encounter_select_own" on encounter;
+create policy "encounter_select_own" on encounter
+  for select to authenticated using (auth.uid() = owner_id);
+drop policy if exists "encounter_insert_own" on encounter;
+create policy "encounter_insert_own" on encounter
+  for insert to authenticated with check (auth.uid() = owner_id);
+drop policy if exists "encounter_update_own" on encounter;
+create policy "encounter_update_own" on encounter
+  for update to authenticated
+  using (auth.uid() = owner_id) with check (auth.uid() = owner_id);
+drop policy if exists "encounter_delete_own" on encounter;
+create policy "encounter_delete_own" on encounter
+  for delete to authenticated using (auth.uid() = owner_id);
+
+alter table combatant enable row level security;
+
+drop policy if exists "combatant_select_own" on combatant;
+create policy "combatant_select_own" on combatant
+  for select to authenticated using (auth.uid() = owner_id);
+drop policy if exists "combatant_insert_own" on combatant;
+create policy "combatant_insert_own" on combatant
+  for insert to authenticated with check (auth.uid() = owner_id);
+drop policy if exists "combatant_update_own" on combatant;
+create policy "combatant_update_own" on combatant
+  for update to authenticated
+  using (auth.uid() = owner_id) with check (auth.uid() = owner_id);
+drop policy if exists "combatant_delete_own" on combatant;
+create policy "combatant_delete_own" on combatant
   for delete to authenticated using (auth.uid() = owner_id);

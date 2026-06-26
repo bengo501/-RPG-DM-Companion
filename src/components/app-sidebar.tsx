@@ -30,10 +30,13 @@ export function AppSidebar() {
 
   return (
     <aside className="flex w-60 shrink-0 flex-col border-r border-border bg-card/40">
-      <div className="flex h-14 items-center gap-2 border-b border-border px-5">
-        <span className="text-lg font-bold tracking-tight">
-          Mesa <span className="text-primary">Viva</span>
-        </span>
+      <div className="flex h-14 items-center border-b border-border px-5">
+        <div className="leading-tight">
+          <div className="text-sm font-bold tracking-tight">OpenMaster</div>
+          <div className="text-xs font-medium text-primary">
+            NarratorHelper
+          </div>
+        </div>
       </div>
       <nav className="flex flex-col gap-1 p-3">
         {nav.map((item) => {
@@ -72,9 +75,7 @@ export function AppSidebar() {
           );
         })}
       </nav>
-      <div className="mt-auto p-3 text-xs text-muted-foreground">
-        v0.1 · M1
-      </div>
+      <div className="mt-auto p-3 text-xs text-muted-foreground">v0.1</div>
     </aside>
   );
 }

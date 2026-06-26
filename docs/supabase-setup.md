@@ -1,6 +1,6 @@
 # Configurando o Supabase (passo a passo)
 
-Este guia liga a **persistência e o login** do Mesa Viva. Leva ~5–10 min.
+Este guia liga a **persistência e o login** do OpenMaster-NarratorHelper. Leva ~5–10 min.
 Você escolheu a **opção A (Supabase Cloud / free tier)** — sem Docker.
 
 > Enquanto não fizer isto, a app roda em **modo demo**: você vê a interface,
@@ -13,7 +13,7 @@ Você escolheu a **opção A (Supabase Cloud / free tier)** — sem Docker.
 1. Acesse https://supabase.com e crie uma conta (pode usar GitHub/Google).
 2. Clique em **New project**.
 3. Defina:
-   - **Name:** `mesa-viva` (ou o que quiser)
+   - **Name:** `openmaster` (ou o que quiser)
    - **Database Password:** crie uma senha forte e **guarde** — você vai usá-la na connection string.
    - **Region:** escolha a mais próxima (ex.: `South America (São Paulo)`).
 4. Aguarde ~2 min até o projeto provisionar.
